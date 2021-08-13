@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
   //   data = jsonDecode(res.body);
   //   print(data);
   // }
+  void part() {}
 
   Widget build(BuildContext context) {
     final _cart = (VxState.store as MyStore).cart;
