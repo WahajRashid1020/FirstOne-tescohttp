@@ -11,8 +11,8 @@ class Cart_page extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.indigo[900],
       appBar: AppBar(
-        backgroundColor: Colors.grey[350],
-        title: "My Cart".text.bold.color(Colors.indigo[900]).make(),
+        backgroundColor: Colors.indigo[900],
+        title: "My Cart".text.bold.color(Colors.grey[350]).make(),
       ),
       body: Column(
         children: [
@@ -50,7 +50,7 @@ class Mytotal extends StatelessWidget {
               Navigator.pushNamed(context, "/info");
             },
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.amber)),
+                backgroundColor: MaterialStateProperty.all(Colors.yellow[800])),
             child: "Proceed".text.black.make(),
           ).w32(context)
         ],

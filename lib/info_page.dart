@@ -20,11 +20,11 @@ class InfoPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.indigo[900],
       appBar: AppBar(
-        backgroundColor: Colors.grey[350],
+        backgroundColor: Colors.indigo[900],
         title: "Place Your Order On WhatsApp"
             .text
             .bold
-            .color(Colors.indigo[900])
+            .color(Colors.grey[350])
             .make(),
       ),
       body: Column(
@@ -81,7 +81,7 @@ class _MytotalState extends State<Mytotal> {
     }
 
     num size = _cart.items.length;
-    var arr = [size];
+    // var arr = [size];
     List<String> list = [];
     return SizedBox(
       height: 140,
@@ -94,7 +94,7 @@ class _MytotalState extends State<Mytotal> {
               .make()
               .p16(),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               InkWell(
                   onTap: _launchURL,
@@ -108,11 +108,11 @@ class _MytotalState extends State<Mytotal> {
                           ..color = Colors.yellow[800]
                           ..style = PaintingStyle.stroke
                           ..strokeJoin = StrokeJoin.round),
-                    beginColor: Colors.green,
+                    beginColor: Colors.lightGreenAccent[400],
                     endColor: Colors.red,
                     times: 30,
                     duration: Duration(seconds: 1),
-                  )).py12(),
+                  )),
 
               // Center(
 
@@ -140,7 +140,7 @@ class _MytotalState extends State<Mytotal> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    const oneSec = Duration(seconds: 200);
+                    // const oneSec = Duration(seconds: 200);
                     // Timer.periodic(oneSec, (Timer t) =>).cancel();
 
                     dialog(context);
@@ -161,7 +161,7 @@ class _MytotalState extends State<Mytotal> {
                           ..color = Colors.yellow[800]
                           ..style = PaintingStyle.stroke
                           ..strokeJoin = StrokeJoin.round),
-                  )).w32(context)
+                  )).w20(context)
             ],
           ).centered(),
         ],
