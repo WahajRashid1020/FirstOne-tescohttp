@@ -54,7 +54,8 @@ class _HomePageState extends State<HomePage> {
   var mytext = "Change It";
   var data;
   // final url = 'http://jsonplaceholder.typicode.com/photos';
-  final url = 'https://api.jsonbin.io/b/604dbddb683e7e079c4eefd3';
+  // final url = 'https://api.jsonbin.io/b/604dbddb683e7e079c4eefd3';
+  final url = 'https://qasim-electronics.herokuapp.com/api/products/';
   @override
   void initState() {
     super.initState();
@@ -63,20 +64,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   loadData() async {
-    var catjson = await rootBundle.loadString("assets/files/catalog.json");
-    final catdata = jsonDecode(catjson);
-    var pd = catdata["products"];
-    CatalogModel.items =
-        List.from(pd).map<Item>((item) => Item.fromMap(item)).toList();
-    setState(() {});
-    // var catjson = await http.get(Uri.parse(url));
-    // final catjs = catjson.body;
-    // // await rootBundle.loadString("assets/files/catalog.json");
-    // final catdata = jsonDecode(catjs);
+    // var catjson = await rootBundle.loadString("assets/files/catalog.json");
+    // final catdata = jsonDecode(catjson);
     // var pd = catdata["products"];
     // CatalogModel.items =
     //     List.from(pd).map<Item>((item) => Item.fromMap(item)).toList();
     // setState(() {});
+    var catjson = await http.get(Uri.parse(url));
+    final catjs = catjson.body;
+    // await rootBundle.loadString("assets/files/catalog.json");
+    final catdata = jsonDecode(catjs);
+    // var pd = catdata["products"];
+    CatalogModel.items =
+        List.from(catdata).map<Item>((item) => Item.fromMap(item)).toList();
+    setState(() {});
   }
 
   // getData() async {
@@ -106,19 +107,33 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 15,
               )),
         ),
-
-        // appBar: AppBar(
-        //     centerTitle: true,
-        //     title:
-        //         Text("MY FLUTTER APP", style: TextStyle(color: Colors.black))),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Search...", style: TextStyle(color: Colors.black)),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearch(
+                      context: context,
+                      delegate: DataSearch(CatalogModel.items));
+                }),
+          ],
+        ),
         body: SafeArea(
           child: Container(
             padding: Vx.m32,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                "Tesco App".text.xl5.bold.color(Colors.indigo[900]).make(),
-                "On Sell ".text.xl2.color(Colors.indigo[900]).make(),
+                "Tesco Mall"
+                    .text
+                    .italic
+                    .bold
+                    .xl4
+                    .color(Colors.indigo[900])
+                    .make(),
+                "Available Items ".text.xl2.color(Colors.indigo[900]).make(),
                 if (CatalogModel.items != null && CatalogModel.items.isNotEmpty)
                   Cataloglist().expand()
                 else
@@ -211,6 +226,92 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+class DataSearch extends SearchDelegate<String> {
+  final List l;
+
+  final rl = [
+    "wahaj",
+    "bilal",
+    "qasim",
+    "wahaj",
+    "bilal",
+    "qasim",
+    "wahaj",
+    "bilal",
+    "qasim",
+  ];
+  // final l = [
+  //   "bilal",
+  //   "qasim",
+  //   "wahaj",
+  //   "bilal",
+  //   "qasim",
+  //   "wahaj",
+  //   "bilal",
+  //   "qasim",
+  // ];
+
+  DataSearch(this.l);
+  // final Item catalog;
+
+  // DataSearch(this.catalog);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+          })
+    ];
+    // TODO: implement buildActions
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: AnimatedIcon(
+            icon: AnimatedIcons.menu_arrow, progress: transitionAnimation),
+        onPressed: () {
+          close(context, null);
+        });
+    // TODO: implement buildLeading
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    // throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    final sl = query.isEmpty
+        ? rl
+        : l.where((element) => element.startsWith(query)).toString();
+
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: l.length,
+        itemBuilder: (context, index) {
+          final catalog = l[index];
+          return InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailsPage(catalog: catalog)),
+            ),
+            child: Catalogitems(catalog: catalog),
+          );
+        });
+    throw UnimplementedError();
+  }
+}
+
 class Cataloglist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -252,10 +353,10 @@ class Catalogitems extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             catalog.name.text.xl.color(Colors.white).make(),
-            catalog.desc.text
-                .color(Colors.white)
-                .textStyle(context.captionStyle)
-                .make(),
+            // catalog.desc.text
+            //     .color(Colors.white)
+            //     .textStyle(context.captionStyle)
+            //     .make(),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: ButtonBar(
@@ -267,14 +368,29 @@ class Catalogitems extends StatelessWidget {
                       .bold
                       .xl
                       .make(),
-                  addtocart(catalog: catalog)
+                  addtocart(catalog: catalog),
                 ],
               ),
             )
           ],
         ))
       ],
-    )).color(Colors.indigo[900]).rounded.square(150).make().py16();
+    )).color(Colors.indigo[900]).rounded.square(130).make().px1().py12();
+  }
+}
+
+class sample extends StatelessWidget {
+  final Item catalog;
+
+  const sample({Key key, this.catalog}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(child: catalog.name.text.make()),
+      ],
+    );
   }
 }
 

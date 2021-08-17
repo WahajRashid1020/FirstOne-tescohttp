@@ -12,17 +12,23 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.indigo[900],
+      ),
       bottomNavigationBar: ButtonBar(
         alignment: MainAxisAlignment.spaceBetween,
         children: [
-          "\$${catalog.price}".text.bold.xl.make(),
+          "\$${catalog.price}"
+              .text
+              .color(Colors.lightGreenAccent[400])
+              .xl
+              .make(),
           addtocart(
             catalog: catalog,
           )
         ],
-      ).p16(),
-      backgroundColor: Colors.grey[350],
+      ).p16().backgroundColor(Colors.indigo[900]),
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

@@ -1,10 +1,13 @@
+// ignore: unused_import
 import 'dart:async';
 
 import 'package:awesomeapp/core/store.dart';
 import 'package:awesomeapp/models/cart.dart';
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
+// ignore: unused_import
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:velocity_x/velocity_x.dart';
