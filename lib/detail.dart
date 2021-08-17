@@ -5,6 +5,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 class DetailsPage extends StatelessWidget {
   final Item catalog;
+  final int i = 0;
 
   const DetailsPage({Key key, @required this.catalog})
       : assert(catalog != null),
@@ -33,7 +34,7 @@ class DetailsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Align(
-            alignment: Alignment.center,
+            alignment: Alignment.centerLeft,
           ),
           Hero(
             tag: Key(catalog.id.toString()),
@@ -54,14 +55,20 @@ class DetailsPage extends StatelessWidget {
                     width: context.screenWidth,
                     child: Column(
                       children: [
-                        Align(
-                          alignment: Alignment.center,
-                        ),
-                        catalog.name.text.bold.xl4.color(Colors.white).make(),
-                        catalog.desc.text
+                        catalog.name.text.bold.xl4
                             .color(Colors.white)
-                            .textStyle(context.captionStyle)
-                            .make(),
+                            .make()
+                            .py12(),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: catalog.desc.text.xl
+                                .color(Colors.white)
+                                .textStyle(context.captionStyle)
+                                .make()
+                                .py12(),
+                          ),
+                        )
                       ],
                     ).p32(),
                     color: Colors.indigo[900],

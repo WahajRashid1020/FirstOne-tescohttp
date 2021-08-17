@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:awesomeapp/core/store.dart';
 import 'package:awesomeapp/models/cart.dart';
+import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter/services.dart';
@@ -65,11 +66,20 @@ class Cartlist extends StatelessWidget {
   }
 }
 
-class Mytotal extends StatelessWidget {
+class Mytotal extends StatefulWidget {
+  @override
+  _MytotalState createState() => _MytotalState();
+}
+
+class _MytotalState extends State<Mytotal> {
   final CartModel _cart = (VxState.store as MyStore).cart;
 
   @override
   Widget build(BuildContext context) {
+    _launchURL() async {
+      launch("tel://03433093451");
+    }
+
     num size = _cart.items.length;
     var arr = [size];
     List<String> list = [];
@@ -78,7 +88,7 @@ class Mytotal extends StatelessWidget {
       child: Column(
         children: [
           "Note".text.center.color(Colors.red).make(),
-          "Place your order on our WhatsApp number which is given below"
+          "Place your order on WhatsApp after saving the number"
               .text
               .color(Colors.green)
               .make()
@@ -86,43 +96,74 @@ class Mytotal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Center(
-                child: SelectableText(
-                  "03433093451",
-                  style: TextStyle(
-                      color: Colors.lightGreenAccent[400],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                  textAlign: TextAlign.left,
-                  onTap: () => print('Tapped'),
-                  toolbarOptions: ToolbarOptions(
-                    copy: true,
-                    selectAll: true,
-                  ),
-                  showCursor: true,
-                  cursorWidth: 2,
-                  cursorColor: Colors.red,
-                  cursorRadius: Radius.circular(5),
-                ),
-              ).p12(),
+              InkWell(
+                  onTap: _launchURL,
+                  child: BlinkText(
+                    'Click Here to Save The Number',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        background: Paint()
+                          ..strokeWidth = 30.0
+                          ..color = Colors.yellow[800]
+                          ..style = PaintingStyle.stroke
+                          ..strokeJoin = StrokeJoin.round),
+                    beginColor: Colors.green,
+                    endColor: Colors.red,
+                    times: 30,
+                    duration: Duration(seconds: 1),
+                  )).py12(),
+
+              // Center(
+
+              //         child: SelectableText(
+              //           "03433093451",
+              //           style: TextStyle(
+              //               color: Colors.lightGreenAccent[400],
+              //               fontWeight: FontWeight.bold,
+              //               fontSize: 15),
+              //           textAlign: TextAlign.left,
+              //           onTap: () => print('Tapped'),
+              //           toolbarOptions: ToolbarOptions(
+              //             copy: true,
+              //             selectAll: true,
+              //           ),
+              //           showCursor: true,
+              //           cursorWidth: 2,
+              //           cursorColor: Colors.red,
+              //           cursorRadius: Radius.circular(5),
+              //         ),
+              //         )
+              //     .p12(),
               SizedBox(
                 height: 10,
               ),
               ElevatedButton(
-                onPressed: () {
-                  const oneSec = Duration(seconds: 200);
-                  // Timer.periodic(oneSec, (Timer t) =>).cancel();
+                  onPressed: () {
+                    const oneSec = Duration(seconds: 200);
+                    // Timer.periodic(oneSec, (Timer t) =>).cancel();
 
-                  dialog(context);
-                  opp(size, list, _cart);
-                  // ;
-                },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green)),
-                child: "Place Order".text.make(),
-              ).w32(context)
+                    dialog(context);
+                    opp(size, list, _cart);
+                    // ;
+                  },
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.indigo[900])),
+                  child: Text(
+                    'Place Order',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: Colors.black,
+                        background: Paint()
+                          ..strokeWidth = 30.0
+                          ..color = Colors.yellow[800]
+                          ..style = PaintingStyle.stroke
+                          ..strokeJoin = StrokeJoin.round),
+                  )).w32(context)
             ],
-          ),
+          ).centered(),
         ],
       ),
     );
