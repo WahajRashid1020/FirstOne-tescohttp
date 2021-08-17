@@ -1,18 +1,20 @@
 import 'dart:convert';
 
+import 'package:awesomeapp/AboutUs.dart';
 import 'package:awesomeapp/add_to_cart.dart';
 import 'package:awesomeapp/cart_page.dart';
 import 'package:awesomeapp/core/store.dart';
 import 'package:awesomeapp/detail.dart';
-import 'package:awesomeapp/drawer.dart';
+// import 'package:awesomeapp/drawer.dart';
 import 'package:awesomeapp/info_page.dart';
 import 'package:awesomeapp/login-page.dart';
-import 'package:awesomeapp/maps.dart';
+// import 'package:awesomeapp/maps.dart';
 import 'package:awesomeapp/models/cart.dart';
 import 'package:awesomeapp/models/catalog.dart';
+import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 // ignore: unused_import
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +29,7 @@ void main() {
       store: MyStore(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: "Flutter App",
+          title: "Qasim Electronics",
           home: HomePage(),
           theme: ThemeData(
               primarySwatch: Colors.indigo,
@@ -37,6 +39,7 @@ void main() {
             "/home": (context) => HomePage(),
             "/cart": (context) => Cart_page(),
             "/info": (context) => InfoPage(),
+            "/about": (context) => Aboutus(),
             "/details": (context) => DetailsPage(
                   catalog: null,
                 ),
@@ -120,58 +123,96 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: Colors.grey[350],
         appBar: AppBar(
-          title:
-              "Tesco Mall".text.italic.bold.xl5.color(Colors.grey[350]).make(),
+          title: "Qasim Electronics"
+              .text
+              .italic
+              .bold
+              .xl4
+              .center
+              .color(Colors.grey[350])
+              .make(),
           backgroundColor: Colors.indigo[900],
           shadowColor: Colors.grey[350],
         ),
         drawer: Drawer(
-          child: ListView(
-            children: [
-              // DrawerHeader(
-              //     child: Text("My Drawer", style: TextStyle(color: Colors.white)),
-              //     decoration: BoxDecoration(color: Colors.purple))
-              UserAccountsDrawerHeader(
-                margin: EdgeInsets.zero,
+          child: Container(
+            color: Colors.indigo[900],
+            child: ListView(
+              children: [
+                // DrawerHeader(
+                //     child: Text("My Drawer", style: TextStyle(color: Colors.white)),
+                //     decoration: BoxDecoration(color: Colors.purple))
+                UserAccountsDrawerHeader(
+                  margin: EdgeInsets.zero,
 
-                decoration: BoxDecoration(color: Colors.indigo[900]),
-                currentAccountPicture: new Container(
-                  width: 100.0,
-                  height: 100.0,
-                  decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: new DecorationImage(
-                      fit: BoxFit.fill,
-                      image: new NetworkImage(
-                        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+                  decoration: BoxDecoration(color: Colors.indigo[900]),
+                  currentAccountPicture: new Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: new DecorationImage(
+                        fit: BoxFit.fill,
+                        image: new NetworkImage(
+                          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+                        ),
                       ),
                     ),
                   ),
+                  accountName: "Wahaj Rashid".text.color(Colors.white).make(),
+                  accountEmail:
+                      "wahaj1020@gmails.com".text.color(Colors.white).make(),
+                  // currentAccountPicture: Image.network(src),
                 ),
-                accountName: "Wahaj Rashid".text.color(Colors.white).make(),
-                accountEmail:
-                    "wahaj1020@gmails.com".text.color(Colors.white).make(),
-                // currentAccountPicture: Image.network(src),
-              ),
-              ListTile(
-                onTap: launchEmail,
-                leading: Icon(Icons.email),
-                title: Text("Email Address"),
-                subtitle: Text("Tap to write Email"),
-              ),
-              ListTile(
-                onTap: _launchMap,
-                leading: Icon(Icons.location_city_sharp),
-                title: Text("Location"),
-                subtitle: Text("Tap to find our location"),
-              ),
-              ListTile(
-                onTap: _launchURL,
-                leading: Icon(Icons.call),
-                title: Text("Contact Us"),
-                subtitle: Text("Tap to directly call us"),
-              ),
-            ],
+                ListTile(
+                  onTap: launchEmail,
+                  leading: Icon(
+                    Icons.email,
+                    color: Colors.yellow[800],
+                  ),
+                  title: "Email Address".text.color(Colors.white).make(),
+                  subtitle:
+                      "Tap to write Email".text.color(Colors.white).make(),
+                ),
+                ListTile(
+                  onTap: _launchMap,
+                  leading: Icon(
+                    Icons.location_on,
+                    color: Colors.yellow[800],
+                  ),
+                  title: "Location".text.color(Colors.white).make(),
+                  subtitle: "Tap to find our location"
+                      .text
+                      .color(Colors.white)
+                      .make(),
+                ),
+                ListTile(
+                  onTap: _launchURL,
+                  leading: Icon(
+                    Icons.call,
+                    color: Colors.yellow[800],
+                  ),
+                  title: "Contact Us".text.color(Colors.white).make(),
+                  subtitle:
+                      "Tap to directly call us".text.color(Colors.white).make(),
+                ),
+                ListTile(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Aboutus()),
+                  ),
+                  leading: Icon(
+                    Icons.info,
+                    color: Colors.yellow[800],
+                  ),
+                  title: "About Us".text.color(Colors.white).make(),
+                  subtitle: "Tap to get information about us"
+                      .text
+                      .color(Colors.white)
+                      .make(),
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: VxBuilder(
@@ -209,9 +250,20 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             padding: Vx.m32,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                "Available Items ".text.xl2.color(Colors.indigo[900]).make(),
+                BlinkText(
+                  'Available Items',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+                  beginColor: Colors.indigo[900],
+                  endColor: Colors.yellow[900],
+                  times: 30,
+                  duration: Duration(seconds: 1),
+                ),
+                // "Available Items ".text.xl2.color(Colors.indigo[900]).make(),
                 if (CatalogModel.items != null && CatalogModel.items.isNotEmpty)
                   Cataloglist().expand()
                 else
@@ -312,8 +364,8 @@ class DataSearch extends SearchDelegate<String> {
             query = "";
           })
     ];
-    // TODO: implement buildActions
-    throw UnimplementedError();
+
+    // throw UnimplementedError();
   }
 
   @override
@@ -324,22 +376,20 @@ class DataSearch extends SearchDelegate<String> {
         onPressed: () {
           close(context, null);
         });
-    // TODO: implement buildLeading
-    throw UnimplementedError();
-  }
 
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     // throw UnimplementedError();
   }
 
   @override
+  Widget buildResults(BuildContext context) {
+    throw UnimplementedError();
+  }
+
+  @override
   Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    final sl = query.isEmpty
-        ? rl
-        : l.where((element) => element.startsWith(query)).toString();
+    // final sl = query.isEmpty
+    //     ? rl
+    //     : l.where((element) => element.startsWith(query)).toString();
 
     return ListView.builder(
         shrinkWrap: true,
@@ -355,7 +405,7 @@ class DataSearch extends SearchDelegate<String> {
             child: Catalogitems(catalog: catalog),
           );
         });
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 }
 
@@ -423,21 +473,6 @@ class Catalogitems extends StatelessWidget {
         ))
       ],
     )).color(Colors.indigo[900]).rounded.square(130).make().py12();
-  }
-}
-
-class sample extends StatelessWidget {
-  final Item catalog;
-
-  const sample({Key key, this.catalog}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(child: catalog.name.text.make()),
-      ],
-    );
   }
 }
 
