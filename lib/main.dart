@@ -4,8 +4,10 @@ import 'package:awesomeapp/add_to_cart.dart';
 import 'package:awesomeapp/cart_page.dart';
 import 'package:awesomeapp/core/store.dart';
 import 'package:awesomeapp/detail.dart';
+import 'package:awesomeapp/drawer.dart';
 import 'package:awesomeapp/info_page.dart';
 import 'package:awesomeapp/login-page.dart';
+import 'package:awesomeapp/maps.dart';
 import 'package:awesomeapp/models/cart.dart';
 import 'package:awesomeapp/models/catalog.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/services.dart';
 // ignore: unused_import
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 // ignore: unused_import
 import 'item_widget.dart';
@@ -32,7 +35,7 @@ void main() {
           routes: {
             "/login": (context) => MyLoginPage(),
             "/home": (context) => HomePage(),
-            "/cart": (context) => Cart_page(),
+            "/cart": (context) => MyHomePage(),
             "/info": (context) => InfoPage(),
             "/details": (context) => DetailsPage(
                   catalog: null,
@@ -87,9 +90,90 @@ class _HomePageState extends State<HomePage> {
   // }
 
   Widget build(BuildContext context) {
+    final String lat = "25.3622";
+    final String lng = "86.0835";
+
+    launchEmail() async {
+      launch(
+          "mailto:rakhi@aeologic.com?subject=TestEmail&body=How are you%20plugin");
+    }
+
+    _launchMap() async {
+      final String googleMapsUrl = "comgooglemaps://?center=$lat,$lng";
+      final String appleMapsUrl = "https://maps.apple.com/?q=$lat,$lng";
+
+      if (await canLaunch(googleMapsUrl)) {
+        await launch(googleMapsUrl);
+      }
+      if (await canLaunch(appleMapsUrl)) {
+        await launch(appleMapsUrl, forceSafariVC: false);
+      } else {
+        throw "Couldn't launch URL";
+      }
+    }
+
+    _launchURL() async {
+      launch("tel://03433093451");
+    }
+
     final _cart = (VxState.store as MyStore).cart;
     return Scaffold(
         backgroundColor: Colors.grey[350],
+        appBar: AppBar(
+          title:
+              "Tesco Mall".text.italic.bold.xl5.color(Colors.grey[350]).make(),
+          backgroundColor: Colors.indigo[900],
+          shadowColor: Colors.grey[350],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              // DrawerHeader(
+              //     child: Text("My Drawer", style: TextStyle(color: Colors.white)),
+              //     decoration: BoxDecoration(color: Colors.purple))
+              UserAccountsDrawerHeader(
+                margin: EdgeInsets.zero,
+
+                decoration: BoxDecoration(color: Colors.indigo[900]),
+                currentAccountPicture: new Container(
+                  width: 100.0,
+                  height: 100.0,
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: new DecorationImage(
+                      fit: BoxFit.fill,
+                      image: new NetworkImage(
+                        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+                      ),
+                    ),
+                  ),
+                ),
+                accountName: "Wahaj Rashid".text.color(Colors.white).make(),
+                accountEmail:
+                    "wahaj1020@gmails.com".text.color(Colors.white).make(),
+                // currentAccountPicture: Image.network(src),
+              ),
+              ListTile(
+                onTap: launchEmail,
+                leading: Icon(Icons.email),
+                title: Text("Email Address"),
+                subtitle: Text("Tap to write Email"),
+              ),
+              ListTile(
+                onTap: _launchMap,
+                leading: Icon(Icons.location_city_sharp),
+                title: Text("Location"),
+                subtitle: Text("Tap to find our location"),
+              ),
+              ListTile(
+                onTap: _launchURL,
+                leading: Icon(Icons.call),
+                title: Text("Contact Us"),
+                subtitle: Text("Tap to directly call us"),
+              ),
+            ],
+          ),
+        ),
         floatingActionButton: VxBuilder(
           mutations: {AddMutation, RemoveMutation},
           builder: (ctx, _) => FloatingActionButton(
@@ -107,32 +191,26 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 15,
               )),
         ),
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Search...", style: TextStyle(color: Colors.black)),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  showSearch(
-                      context: context,
-                      delegate: DataSearch(CatalogModel.items));
-                }),
-          ],
-        ),
+        // appBar: AppBar(
+        //   centerTitle: true,
+        //   title: Text("Search...", style: TextStyle(color: Colors.white)),
+        //   actions: [
+        //     IconButton(
+        //         icon: Icon(Icons.search),
+        //         onPressed: () {
+        //           showSearch(
+        //               context: context,
+        //               delegate: DataSearch(CatalogModel.items));
+        //         }),
+        //   ],
+        // ),
+
         body: SafeArea(
           child: Container(
             padding: Vx.m32,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                "Tesco Mall"
-                    .text
-                    .italic
-                    .bold
-                    .xl4
-                    .color(Colors.indigo[900])
-                    .make(),
                 "Available Items ".text.xl2.color(Colors.indigo[900]).make(),
                 if (CatalogModel.items != null && CatalogModel.items.isNotEmpty)
                   Cataloglist().expand()
@@ -177,38 +255,7 @@ class _HomePageState extends State<HomePage> {
         //   //       )
         //   //     : Center(child: CircularProgressIndicator()),
         // ),
-        // drawer: Drawer(
-        //   child: ListView(
-        //     children: [
-        //       // DrawerHeader(
-        //       //     child: Text("My Drawer", style: TextStyle(color: Colors.white)),
-        //       //     decoration: BoxDecoration(color: Colors.purple))
-        //       UserAccountsDrawerHeader(
-        //         accountName: Text("Wahaj Rashid"),
-        //         accountEmail: Text("wahaj1020@gmails.com"),
-        //         // currentAccountPicture: Image.network(src),
-        //       ),
-        //       ListTile(
-        //         leading: Icon(Icons.person),
-        //         title: Text("Accont"),
-        //         subtitle: Text("Personal Data"),
-        //         trailing: Icon(Icons.edit),
-        //       ),
-        //       ListTile(
-        //         leading: Icon(Icons.email),
-        //         title: Text("Email"),
-        //         subtitle: Text("Email Settings"),
-        //         trailing: Icon(Icons.edit),
-        //       ),
-        //       ListTile(
-        //         leading: Icon(Icons.info_rounded),
-        //         title: Text("Info"),
-        //         subtitle: Text("Personal Information"),
-        //         trailing: Icon(Icons.edit),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+
         // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         // floatingActionButton: FloatingActionButton(
         //     onPressed: () {
@@ -375,7 +422,7 @@ class Catalogitems extends StatelessWidget {
           ],
         ))
       ],
-    )).color(Colors.indigo[900]).rounded.square(130).make().px1().py12();
+    )).color(Colors.indigo[900]).rounded.square(130).make().py12();
   }
 }
 
