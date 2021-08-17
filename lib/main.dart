@@ -35,7 +35,7 @@ void main() {
           routes: {
             "/login": (context) => MyLoginPage(),
             "/home": (context) => HomePage(),
-            "/cart": (context) => MyHomePage(),
+            "/cart": (context) => Cart_page(),
             "/info": (context) => InfoPage(),
             "/details": (context) => DetailsPage(
                   catalog: null,
