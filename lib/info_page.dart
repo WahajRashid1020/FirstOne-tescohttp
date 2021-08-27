@@ -100,14 +100,6 @@ class _MytotalState extends State<Mytotal> {
                   onTap: _launchURL,
                   child: BlinkText(
                     'Click Here to Save The Number',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        background: Paint()
-                          ..strokeWidth = 30.0
-                          ..color = Colors.yellow[800]
-                          ..style = PaintingStyle.stroke
-                          ..strokeJoin = StrokeJoin.round),
                     beginColor: Colors.lightGreenAccent[400],
                     endColor: Colors.red,
                     times: 30,
@@ -149,21 +141,10 @@ class _MytotalState extends State<Mytotal> {
                   },
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.indigo[900])),
-                  child: Text(
-                    'Place Order',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        color: Colors.black,
-                        background: Paint()
-                          ..strokeWidth = 30.0
-                          ..color = Colors.yellow[800]
-                          ..style = PaintingStyle.stroke
-                          ..strokeJoin = StrokeJoin.round),
-                  )).w20(context)
+                          MaterialStateProperty.all(Colors.yellow[800])),
+                  child: "Order Now".text.black.make())
             ],
-          ).centered(),
+          ),
         ],
       ),
     );

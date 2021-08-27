@@ -1,5 +1,7 @@
 import 'package:awesomeapp/add_to_cart.dart';
+import 'package:awesomeapp/main.dart';
 import 'package:awesomeapp/models/catalog.dart';
+import 'package:awesomeapp/widget/image.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -14,21 +16,26 @@ class DetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo[900],
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 18.0),
+          child: Ink(
+            // decoration: ShapeDecoration(
+            //   color: Colors.grey[200],
+            //   shape: CircleBorder(),
+            // ),
+            child: new IconButton(
+                icon: new Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
+                ),
+                onPressed: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => HomePage()))),
+          ),
+        ),
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
       ),
-      bottomNavigationBar: ButtonBar(
-        alignment: MainAxisAlignment.spaceBetween,
-        children: [
-          "\$${catalog.price}"
-              .text
-              .color(Colors.lightGreenAccent[400])
-              .xl
-              .make(),
-          addtocart(
-            catalog: catalog,
-          )
-        ],
-      ).p16().backgroundColor(Colors.indigo[900]),
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,15 +43,22 @@ class DetailsPage extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
           ),
-          Hero(
-            tag: Key(catalog.id.toString()),
-            child: Image.network(catalog.image)
-                .box
-                .rounded
-                .make()
-                .w64(context)
-                .h64(context),
-          ).h40(context),
+          GestureDetector(
+            child: Hero(
+              tag: Key(catalog.id.toString()),
+              child: Image.network(catalog.image)
+                  .box
+                  .rounded
+                  .make()
+                  .w64(context)
+                  .h64(context),
+            ).h40(context),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return DetailScreen(catalog: catalog);
+              }));
+            },
+          ),
           Expanded(
             child: VxArc(
                 height: 30.0,
@@ -55,10 +69,18 @@ class DetailsPage extends StatelessWidget {
                     width: context.screenWidth,
                     child: Column(
                       children: [
-                        catalog.name.text.bold.xl4
-                            .color(Colors.white)
-                            .make()
-                            .py12(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: catalog.name.text.bold.xl
+                                  .color(Colors.yellow[800])
+                                  .make()
+                                  .py12(),
+                            ),
+                          ),
+                        ),
                         Expanded(
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
