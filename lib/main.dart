@@ -11,6 +11,7 @@ import 'package:awesomeapp/login-page.dart';
 // import 'package:awesomeapp/maps.dart';
 import 'package:awesomeapp/models/cart.dart';
 import 'package:awesomeapp/models/catalog.dart';
+import 'package:awesomeapp/widget/search_widget.dart';
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ void main() {
       store: MyStore(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: "Qasim Electronics",
+          title: "Tesco App",
           home: HomePage(),
           theme: ThemeData(
               primarySwatch: Colors.indigo,
@@ -62,6 +63,8 @@ class _HomePageState extends State<HomePage> {
   // final url = 'http://jsonplaceholder.typicode.com/photos';
   // final url = 'https://api.jsonbin.io/b/604dbddb683e7e079c4eefd3';
   final url = 'https://qasim-electronics.herokuapp.com/api/products/';
+
+  _HomePageState();
   @override
   void initState() {
     super.initState();
@@ -123,7 +126,33 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: Colors.grey[350],
         appBar: AppBar(
-          title: "Qasim Electronics"
+          centerTitle: true,
+          actions: [
+            OutlinedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context, builder: (context) => Aboutus());
+              },
+              child: BlinkText(
+                'Card',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
+                beginColor: Colors.grey[350],
+                endColor: Colors.indigo[900],
+                times: 300,
+                duration: Duration(seconds: 1),
+              ),
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Colors.yellow[800],
+                shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(27),
+                ),
+              ),
+            ),
+          ],
+          title: "Tesco App"
               .text
               .italic
               .bold
@@ -215,23 +244,23 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        floatingActionButton: VxBuilder(
-          mutations: {AddMutation, RemoveMutation},
-          builder: (ctx, _) => FloatingActionButton(
-            backgroundColor: Colors.yellow[800],
-            onPressed: () {
-              Navigator.pushNamed(context, "/cart");
-            },
-            child: Icon(CupertinoIcons.cart).iconColor(Colors.black),
-          ).badge(
-              color: Vx.red500,
-              size: 20,
-              count: _cart.items.length,
-              textStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-              )),
-        ),
+        // floatingActionButton: VxBuilder(
+        //   mutations: {AddMutation, RemoveMutation},
+        //   builder: (ctx, _) => FloatingActionButton(
+        //     backgroundColor: Colors.yellow[800],
+        //     onPressed: () {
+        //       Navigator.pushNamed(context, "/cart");
+        //     },
+        //     child: Icon(CupertinoIcons.cart).iconColor(Colors.black),
+        //   ).badge(
+        //       color: Vx.red500,
+        //       size: 20,
+        //       count: _cart.items.length,
+        //       textStyle: TextStyle(
+        //         color: Colors.black,
+        //         fontSize: 15,
+        //       )),
+        // ),
         // appBar: AppBar(
         //   centerTitle: true,
         //   title: Text("Search...", style: TextStyle(color: Colors.white)),
@@ -245,7 +274,6 @@ class _HomePageState extends State<HomePage> {
         //         }),
         //   ],
         // ),
-
         body: SafeArea(
           child: Container(
             padding: Vx.m32,
@@ -326,6 +354,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class DataSearch extends SearchDelegate<String> {
+  final List list = [];
   final List l;
 
   final rl = [
@@ -382,18 +411,20 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
+    // final sl = query.isEmpty
+    //     ? l
+    //     : l.where((element) => element.startsWith(query)).toString();
+
     throw UnimplementedError();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // final sl = query.isEmpty
-    //     ? rl
-    //     : l.where((element) => element.startsWith(query)).toString();
+    l.where((element) => element.startsWith(query)).toString();
 
     return ListView.builder(
         shrinkWrap: true,
-        itemCount: l.length,
+        itemCount: list.length,
         itemBuilder: (context, index) {
           final catalog = l[index];
           return InkWell(
@@ -409,70 +440,133 @@ class DataSearch extends SearchDelegate<String> {
   }
 }
 
-class Cataloglist extends StatelessWidget {
+class Cataloglist extends StatefulWidget {
+  final List catalog;
+
+  const Cataloglist({Key key, this.catalog}) : super(key: key);
+  @override
+  _CataloglistState createState() => _CataloglistState();
+}
+
+class _CataloglistState extends State<Cataloglist> {
+  String query = '';
+  List<Item> bk;
+
+  _CataloglistState();
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: CatalogModel.items.length,
-        itemBuilder: (context, index) {
-          final catalog = CatalogModel.items[index];
-          return InkWell(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DetailsPage(catalog: catalog)),
-            ),
-            child: Catalogitems(catalog: catalog),
-          );
-        });
+    return Column(
+      children: [
+        // buildSerach(),
+        Expanded(
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: CatalogModel.items.length,
+              itemBuilder: (context, index) {
+                final catalog = CatalogModel.items[index];
+                return InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DetailsPage(catalog: catalog)),
+                  ),
+                  child: Catalogitems(catalog: catalog),
+                );
+              }),
+        ),
+      ],
+    );
+  }
+
+  Widget buildSerach() => SearchWidget(
+        text: query,
+        hintText: "Search...",
+        onChanged: SearchBox,
+      );
+
+  void SearchBox(String query) {
+    final url = 'https://qasim-electronics.herokuapp.com/api/products/';
+
+    loadData1(query) async {
+      // var catjson = await rootBundle.loadString("assets/files/catalog.json");
+      // final catdata = jsonDecode(catjson);
+      // var pd = catdata["products"];
+      // CatalogModel.items =
+      //     List.from(pd).map<Item>((item) => Item.fromMap(item)).toList();
+      // setState(() {});
+      var catjson = await http.get(Uri.parse(url));
+      final catjs = catjson.body;
+      // await rootBundle.loadString("assets/files/catalog.json");
+      final catdata = jsonDecode(catjs);
+      // var pd = catdata["products"];
+      CatalogModel.items =
+          List.from(catdata).map<Item>((item) => Item.fromMap(item)).toList();
+      setState(() {
+        this.query = query;
+        this.bk = bk;
+      });
+    }
+
+    ;
   }
 }
 
 class Catalogitems extends StatelessWidget {
   final Item catalog;
 
-  const Catalogitems({Key key, @required this.catalog})
+  const Catalogitems({Key key, @required this.catalog, list})
       : assert(catalog != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return VxBox(
-        child: Row(
-      children: [
-        Hero(
-            tag: Key(catalog.id.toString()),
-            child: Catalogimage(image: catalog.image)),
-        Expanded(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            catalog.name.text.xl.color(Colors.white).make(),
-            // catalog.desc.text
-            //     .color(Colors.white)
-            //     .textStyle(context.captionStyle)
-            //     .make(),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ButtonBar(
-                alignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  "\$${catalog.price}"
-                      .text
-                      .color(Colors.lightGreenAccent[400])
-                      .bold
-                      .xl
-                      .make(),
-                  addtocart(catalog: catalog),
-                ],
+        child: Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Row(
+        children: [
+          Hero(
+              tag: Key(catalog.id.toString()),
+              child: Catalogimage(image: catalog.image)),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: "${catalog.name}".text.xl.color(Colors.white).make(),
+                  ),
+                ),
               ),
-            )
-          ],
-        ))
-      ],
-    )).color(Colors.indigo[900]).rounded.square(130).make().py12();
+
+              // catalog.desc.text
+              //     .color(Colors.white)
+              //     .textStyle(context.captionStyle)
+              //     .make(),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    "\$${catalog.price}"
+                        .text
+                        .color(Colors.lightGreenAccent[400])
+                        .bold
+                        .xl
+                        .make(),
+                    addtocart(catalog: catalog),
+                  ],
+                ),
+              )
+            ],
+          ))
+        ],
+      ),
+    )).color(Colors.indigo[900]).rounded.square(130).make().py1();
   }
 }
 
@@ -493,6 +587,6 @@ class Catalogimage extends StatelessWidget {
         .color(Colors.white)
         .make()
         .w24(context)
-        .h20(context);
+        .h15(context);
   }
 }

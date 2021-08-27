@@ -7,9 +7,6 @@ class Aboutus extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.indigo[800],
-        appBar: AppBar(
-          backgroundColor: Colors.indigo[900],
-        ),
         body: Container(
           height: 1000,
           child: ListView(
@@ -17,26 +14,6 @@ class Aboutus extends StatelessWidget {
               ListTile(
                 tileColor: Colors.yellow[800],
                 title: "Visiting Card".text.xl5.bold.italic.center.make(),
-              ),
-              ListTile(
-                tileColor: Colors.indigo[800],
-                title: "".text.center.make(),
-              ),
-              ListTile(
-                tileColor: Colors.indigo[800],
-                title: "".text.make(),
-              ),
-              ListTile(
-                tileColor: Colors.indigo[800],
-                title: "".text.make(),
-              ),
-              ListTile(
-                tileColor: Colors.indigo[800],
-                title: "".text.make(),
-              ),
-              ListTile(
-                tileColor: Colors.indigo[800],
-                title: "".text.make(),
               ),
               ListTile(
                 tileColor: Colors.yellow[800],
